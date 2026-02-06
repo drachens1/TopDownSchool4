@@ -7,6 +7,7 @@ class UiManager:
     go_to_button: Button
     stand_still_button: Button
     face_button: Button
+    current_order_creation: int
 
     def __init__(self):
         y = 100
@@ -16,6 +17,7 @@ class UiManager:
         self.go_to_button = Button("Go To", 200, y, w, h)
         self.stand_still_button = Button("Stand still", 300, y, w, h)
         self.face_button = Button("Face", 400, y, w, h)
+        self.current_order_creation = -1
 
     def on_click(self) -> int:
         clicked = self.face_button.hover
@@ -37,6 +39,7 @@ class UiManager:
         self.go_to_button.set_active(False)
         self.stand_still_button.set_active(False)
         self.follow_button.set_active(False)
+        self.current_order_creation = order_type
         if order_type == FACE_TYPE:
             self.face_button.set_active(True)
         elif order_type == GO_TO_TYPE:
@@ -45,6 +48,7 @@ class UiManager:
             self.stand_still_button.set_active(True)
         elif order_type == FOLLOW_TYPE:
             self.follow_button.set_active(True)
+
 
     def on_hover(self, mouse_x: int, mouse_y: int) -> bool:
         hover = self.face_button.on_hover(mouse_x, mouse_y)

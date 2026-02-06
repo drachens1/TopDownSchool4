@@ -1,13 +1,10 @@
 from central_manager import CentralManager
-from grid_helper import SCALE, map_cell
+from grid_helper import SCALE, map_cell, EMPTY, BUILDING
 from map.buildings_manager import Building, BuildingsManager
 from map.terrain_map import TerrainMap
 from order.order_manager import OrderManager
 from troop.troops import Troop
-from troop.troops_manager import TroopsManager
-
-EMPTY = 0
-BUILDING = 1
+from troop.troops_manager import TroopsManager, N, S
 
 def load_central_manager(map_path: str) -> CentralManager:
     cells = []
@@ -25,18 +22,18 @@ def load_central_manager(map_path: str) -> CentralManager:
 
     for y, row in enumerate(lines[1:]):
          for x, char in enumerate(row):
-             wx = x * SCALE
-             wy = y * SCALE
              if char == "x":
+                 wx = x * SCALE
+                 wy = y * SCALE
                  buildings.append(Building(wx, wy, SCALE, SCALE))
                  cells.append(BUILDING)
              elif char == "f":
                  cell = map_cell(x, y, width)
-                 troops.append((Troop(wx, wy, SCALE, cell, 45, 10, True), cell))
+                 troops.append((Troop(SCALE, cell, N, 3, True), cell))
                  cells.append(EMPTY)
              elif char == "e":
                  cell = map_cell(x, y, width)
-                 troops.append((Troop(wx, wy, SCALE, cell, 45, 10, False), cell))
+                 troops.append((Troop(SCALE, cell, S, 3, False), cell))
                  cells.append(EMPTY)
              else:
                  cells.append(EMPTY)

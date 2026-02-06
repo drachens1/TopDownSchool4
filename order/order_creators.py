@@ -1,36 +1,31 @@
+
 from abc import ABC, abstractmethod
 import math
 
 import pygame.draw
 
 from grid_helper import SCALE, map_cell
-from map.terrain_map import TerrainMap
 from order.pathfinder import find_path
 
-FOLLOW_TYPE = 0
-GO_TO_TYPE = 1
-STAND_STILL_TYPE = 2
-FACE_TYPE = 3
-
-class Order(ABC):
+class OrderCreator(ABC):
     def __init__(self, target_troop_id: int):
         self.target_troop_id = target_troop_id
         self.finished = False  # common lifecycle flag
 
     @abstractmethod
-    def tick(self, map, troop_manager) -> None:
+    def tick(self, mx, my, camera, map, troop_manager) -> None:
         pass
 
     @abstractmethod
     def render(self, WIN, camera) -> None:
         pass
 
-class Follow(Order):
+class FollowCreator(OrderCreator):
     def __init__(self, target_troop_id: int, follow_troop_id: int):
         super().__init__(target_troop_id)
         self.follow_troop_id = follow_troop_id
 
-    def tick(self, map, troop_manager):
+    def tick(self, mx, my, camera, map, troop_manager):
         troop = troop_manager.troops[self.target_troop_id]
         target = troop_manager.troops[self.follow_troop_id]
 
@@ -39,12 +34,12 @@ class Follow(Order):
     def render(self, WIN, camera):
         pass
 
-class GoTo(Order):
+class GoToCreator(OrderCreator):
     def __init__(self, target_troop_id: int, x: int, y: int):
         super().__init__(target_troop_id)
         self.target_pos = (x, y)
 
-    def tick(self, map: TerrainMap, troop_manager):
+    def tick(self, mx, my, camera, map, troop_manager):
         troop = troop_manager.troops[self.target_troop_id]
         start = troop.cell
         end = map_cell(self.target_pos[0], self.target_pos[1], map.width)
@@ -59,20 +54,20 @@ class GoTo(Order):
         pygame.draw.rect(WIN, (255, 255, 255), camera.apply_on_rect(self.target_pos[0]*SCALE,
                                                                     self.target_pos[1]*SCALE, SCALE, SCALE))
 
-class StandStill(Order):
-    def tick(self, map, troop_manager):
+class StandStillCreator(OrderCreator):
+    def tick(self, mx, my, camera, map, troop_manager):
         troop = troop_manager.troops[self.target_troop_id]
         troop.stop()
 
     def render(self, WIN, camera):
         pass
 
-class Face(Order):
+class FaceCreator(OrderCreator):
     def __init__(self, target_troop_id: int, x: float, y: float):
         super().__init__(target_troop_id)
         self.target = (x, y)
 
-    def tick(self, map, troop_manager):
+    def tick(self, mx, my, camera, map, troop_manager):
         troop = troop_manager.troops[self.target_troop_id]
 
         dx = self.target[0] - troop.x

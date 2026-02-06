@@ -37,6 +37,21 @@ class Camera:
         sh = h * self.zoom
         return pygame.Rect(sx, sy, sw, sh)
 
+    def apply_on_surface(self, surface: pygame.Surface) -> pygame.Surface:
+        scaled = pygame.transform.scale(
+            surface,
+            (
+                int(surface.get_width() * self.zoom),
+                int(surface.get_height() * self.zoom),
+            ),
+        )
+
+        offset_x = int(-self.x * self.zoom)
+        offset_y = int(-self.y * self.zoom)
+
+        return scaled, (offset_x, offset_y)
+
+
     def has_clicked(self, mouse_x, mouse_y, x, y, w, h):
         sx = (x - self.x) * self.zoom
         sy = (y - self.y) * self.zoom

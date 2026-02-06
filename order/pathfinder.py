@@ -1,6 +1,6 @@
 from heapq import heappush, heappop
 
-from loader import EMPTY
+from grid_helper import EMPTY
 
 
 def heuristic(a: int, b: int, width: int) -> int:
@@ -8,7 +8,7 @@ def heuristic(a: int, b: int, width: int) -> int:
     bx, by = b % width, b // width
     return abs(ax - bx) + abs(ay - by)
 
-def start(terrain, start_cell: int, end_cell: int) -> list[int]:
+def find_path(terrain, start_cell: int, end_cell: int) -> list[int]:
     if start_cell == end_cell:
         return []
 
@@ -25,7 +25,7 @@ def start(terrain, start_cell: int, end_cell: int) -> list[int]:
             break
 
         for neighbor in terrain.neighbors(current):
-            if terrain.cells[neighbor] == EMPTY:
+            if terrain.cells[neighbor] != EMPTY:
                 continue
 
             tentative_g = g_score[current] + 1

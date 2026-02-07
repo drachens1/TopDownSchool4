@@ -1,34 +1,9 @@
 from typing import Any
 import pygame
 
+from directions import _transform_octant, DIR_VECTORS
 from grid_helper import screen_to_cell, SCALE
 from troop.troops import Troop
-
-# Directions
-N, NE, E, SE, S, SW, W, NW = range(8)
-
-DIR_VECTORS = {
-    N:  (0, -1),
-    NE: (1, -1),
-    E:  (1, 0),
-    SE: (1, 1),
-    S:  (0, 1),
-    SW: (-1, 1),
-    W:  (-1, 0),
-    NW: (-1, -1),
-}
-
-
-def _transform_octant(cx, cy, dx, dy, octant):
-    if octant == 0: return cx + dx, cy + dy
-    if octant == 1: return cx + dy, cy + dx
-    if octant == 2: return cx - dy, cy + dx
-    if octant == 3: return cx - dx, cy + dy
-    if octant == 4: return cx - dx, cy - dy
-    if octant == 5: return cx - dy, cy - dx
-    if octant == 6: return cx + dy, cy - dx
-    if octant == 7: return cx + dx, cy - dy
-
 
 class TroopsManager:
     troops: list[Any]
@@ -60,11 +35,14 @@ class TroopsManager:
             self.troops.append(troop)
             self.troop_id_map[cell] = tid
 
-    def move_troop(self, troop_id: int, from_cell: int, to_cell: int):
+    def move_troop(self, troop_id: int, from_cell: int, to_cell: int) -> bool:
+        if self.troop_id_map[to_cell] != -1:
+            return False
         troop = self.troops[troop_id]
         troop.cell = to_cell
         self.troop_id_map[from_cell] = -1
         self.troop_id_map[to_cell] = troop_id
+        return True
 
     def troop_at(self, cell: int) -> int:
         tid = self.troop_id_map[cell]

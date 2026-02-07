@@ -2,7 +2,8 @@ import pygame
 
 from camera import Camera
 from loader import load_central_manager
-from order.order_creation import order_creation_update, order_creation_finish
+from order.order_creators import GoToCreator
+from order.orders import GO_TO_TYPE
 from ui.ui_manager import UiManager
 
 pygame.init()
@@ -16,6 +17,7 @@ font = pygame.font.Font(None, 32)
 
 central_manager = load_central_manager("map.txt")
 ui_manager = UiManager()
+last_active_troop = -1
 
 clock = pygame.time.Clock()
 while running:
@@ -30,17 +32,30 @@ while running:
     x, y = pygame.mouse.get_pos()
     if central_manager.has_active_troop():
         hover = ui_manager.on_hover(x, y)
-        order_creation_update(x, y, camera, central_manager.troops_manager.active_troop_id,
-                              ui_manager.current_order_creation, central_manager.order_manager)
         if left_held:
             id = ui_manager.on_click()
             ui_manager.set_button_active(id)
+            if id == GO_TO_TYPE:
+                order = GoToCreator(central_manager.troops_manager.active_troop_id, x, y)
+            else:
+                order = None
+            central_manager.order_manager.order_creation = order
         else:
             ui_manager.not_click()
     else:
         hover = False
-        order_creation_finish(central_manager.order_manager, central_manager.troops_manager)
+        order_creator = central_manager.order_manager.order_creation
+        if order_creator is not None:
+            central_manager.order_manager.order_creation = None
+            order = order_creator.click(central_manager.troops_manager, central_manager.terrain_map)
+            if order is not None:
+                troop = central_manager.troops_manager.troops[last_active_troop]
+                if troop.current_order != -1:
+                    central_manager.order_manager.remove_order(troop.current_order)
+                id = central_manager.order_manager.add_order(order)
+                troop.current_order = id
 
+    last_active_troop = central_manager.troops_manager.active_troop_id
     mouse_down = False
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -49,7 +64,7 @@ while running:
             if not hover:
                 central_manager.on_click(x, y, camera)
 
-    central_manager.render(WIN, camera)
+    central_manager.render(WIN, camera, x, y)
     if central_manager.has_active_troop():
         ui_manager.render(WIN, font)
 

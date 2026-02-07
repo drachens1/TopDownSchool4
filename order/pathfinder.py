@@ -2,7 +2,6 @@ from heapq import heappush, heappop
 
 from grid_helper import EMPTY
 
-
 def heuristic(a: int, b: int, width: int) -> int:
     ax, ay = a % width, a // width
     bx, by = b % width, b // width

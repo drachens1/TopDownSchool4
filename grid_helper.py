@@ -28,3 +28,8 @@ def cell_to_xy(cell: int, width: int):
 def xy_to_cell(x: int, y: int, width: int):
     return y * width + x
 
+def is_screen_pos_on_map(sx: int, sy: int, width: int, height: int, camera) -> bool:
+    wx = (sx / camera.zoom) + camera.x
+    wy = (sy / camera.zoom) + camera.y
+
+    return 0 <= wx // SCALE < width and 0 <= wy // SCALE < height

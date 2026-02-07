@@ -1,10 +1,12 @@
 from central_manager import CentralManager
+from directions import S, N
 from grid_helper import SCALE, map_cell, EMPTY, BUILDING
 from map.buildings_manager import Building, BuildingsManager
 from map.terrain_map import TerrainMap
 from order.order_manager import OrderManager
 from troop.troops import Troop
-from troop.troops_manager import TroopsManager, N, S
+from troop.troops_manager import TroopsManager
+
 
 def load_central_manager(map_path: str) -> CentralManager:
     cells = []

@@ -23,8 +23,8 @@ class CentralManager:
     def on_click(self, x: int, y: int, camera):
         self.troops_manager.on_left_click(x, y, self.terrain_map.width, camera)
 
-    def render(self, WIN, camera):
-        self.order_manager.tick(self.terrain_map, self.troops_manager)
+    def render(self, WIN, camera, mx, my):
+        self.order_manager.tick(self.terrain_map, self.troops_manager, mx, my, camera)
 
         self.terrain_map.render(WIN, camera)
         self.troops_manager.update_visibility(self.terrain_map)

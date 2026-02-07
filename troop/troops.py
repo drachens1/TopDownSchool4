@@ -30,9 +30,6 @@ class Troop:
     def set_active(self, active: bool):
         self.active = active
 
-    # def command(self):
-    #     print("")
-
     def render(self, WIN, camera, width: int):
         if self.friendly:
             if self.active:

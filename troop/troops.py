@@ -1,7 +1,6 @@
 import pygame.draw
 
 from grid_helper import cell_to_xy, SCALE
-from order.orders import Order
 
 FRIENDLY = (0, 0, 255)
 ENEMY = (255,0,0)

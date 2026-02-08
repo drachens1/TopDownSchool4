@@ -16,7 +16,7 @@ FACE_TYPE = 3
 class Order(ABC):
     def __init__(self, target_troop_id: int):
         self.target_troop_id = target_troop_id
-        self.finished = False  # common lifecycle flag
+        self.finished = False
         self.tick_num = 0
 
     def order_tick(self, map, troop_manager):
@@ -86,8 +86,7 @@ class GoTo(Order):
 
 class StandStill(Order):
     def tick(self, map, troop_manager):
-        troop = troop_manager.troops[self.target_troop_id]
-        troop.stop()
+        pass
 
     def render(self, WIN, camera):
         pass

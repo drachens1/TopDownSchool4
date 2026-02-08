@@ -1,7 +1,6 @@
 from order.orders import FACE_TYPE, GO_TO_TYPE, STAND_STILL_TYPE, FOLLOW_TYPE
 from ui.button import Button
 
-
 class UiManager:
     follow_button: Button
     go_to_button: Button

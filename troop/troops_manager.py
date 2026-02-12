@@ -5,10 +5,16 @@ from directions import _transform_octant, DIR_VECTORS
 from grid_helper import screen_to_cell, SCALE
 from troop.troops import Troop
 
+class Combat:
+    friendlies: list[int]
+    enemies: list[int]
+
 class TroopsManager:
-    troops: list[Any]
+    troops: list[Troop]
     visible: list[bool]
+    troop_visible: list[bool]
     troop_id_map: list[int]
+    combats: list[Combat]
     active_troop_id: int
     width: int
     height: int
@@ -19,11 +25,13 @@ class TroopsManager:
         self.height = height
 
         self.troops: list[Troop] = []
+        self.combats: list[Combat] = []
         self.troop_id_map = [-1] * (width * height)
 
         self.active_troop_id = -1
 
         self.visible = [False] * (width * height)
+        self.troop_visible = [False] * (self.width * self.height)
 
         self.fog = pygame.Surface(
             (width * SCALE, height * SCALE),
@@ -85,11 +93,16 @@ class TroopsManager:
         for troop in self.troops:
             if not troop.friendly:
                 continue
+            self.troop_visible = [False] * (self.width * self.height)
 
             cx, cy = self.cell_to_xy(troop.cell)
             self._compute_fov(cx, cy, troop.see_dist, terrain)
-            self._apply_facing_filter(cx, cy, troop.angle)
+            self._apply_facing_filter(troop, cx, cy, troop.angle)
             self.visible[troop.cell] = True
+
+            for i, troop_vis in enumerate(self.troop_visible):
+                if troop_vis:
+                    self.visible[i] = troop_vis
 
     def _compute_fov(self, cx, cy, radius, terrain):
         for octant in range(8):
@@ -121,7 +134,7 @@ class TroopsManager:
                 if 0 <= x < self.width and 0 <= y < self.height:
                     cell = self.xy_to_cell(x, y)
                     if dx*dx + dy*dy <= radius_sq:
-                        self.visible[cell] = True
+                        self.troop_visible[cell] = True
 
                     if blocked:
                         if terrain.blocks_vision(cell):
@@ -141,19 +154,43 @@ class TroopsManager:
             if blocked:
                 break
 
-    def _apply_facing_filter(self, cx, cy, angle):
+    def _apply_facing_filter(self, viewer, cx, cy, angle):
         dx, dy = DIR_VECTORS[angle]
-        for cell, vis in enumerate(self.visible):
+        for cell, vis in enumerate(self.troop_visible):
             if not vis:
                 continue
             x, y = self.cell_to_xy(cell)
             if (x - cx) * dx + (y - cy) * dy <= 0:
-                self.visible[cell] = False
+                self.troop_visible[cell] = False
+            elif self.troop_visible[cell]:
+                troop_id = self.troop_id_map[cell]
+                if troop_id != -1:
+                    continue
+                troop = self.troops[troop_id]
+                if troop is None:
+                    continue
+                if troop.friendly:
+                    continue
+                print("X",x,"Y",y)
+                self.start_combat(viewer, troop)
+
+    def resolve_combat(self):
+        for combat in self.combats:
+            pass
+
+    def start_combat(self, initiator: Troop, against: Troop):
+        print("combat started")
+        pass
 
     def render(self, WIN, camera):
+        num = 0
         for troop in self.troops:
+            if troop.friendly:
+                num+=1
             if self.visible[troop.cell]:
                 troop.render(WIN, camera, self.width)
+
+        self.resolve_combat()
 
         self.fog.fill((50, 50, 50, 200))
         for cell, vis in enumerate(self.visible):

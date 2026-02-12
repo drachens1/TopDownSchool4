@@ -51,7 +51,6 @@ class Camera:
 
         return scaled, (offset_x, offset_y)
 
-
     def has_clicked(self, mouse_x, mouse_y, x, y, w, h):
         sx = (x - self.x) * self.zoom
         sy = (y - self.y) * self.zoom

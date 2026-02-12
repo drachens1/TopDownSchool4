@@ -1,11 +1,26 @@
-10 10
-##########
-#x###e####
-#x#e######
-#x########
-#xxxxxxxx#
-#xxxxxxxx#
-#x########
-#x###f####
-#x#f######
-##########
+25 25
+#############xxxxxxxxxxxx
+#x###e###########f#xxxxxx
+#x#e###############xxxxxx
+#x#######################
+#xxxxxxxx###########e####
+#xxxxxxxx########f#######
+#xx######################
+#xx##f########xx##xx#####
+#xxf##########xx#exx#####
+##############xxxxxx#####
+#########################
+xxxxx############xxx##e##
+xxxxx#######f####xxx#####
+xxxxx####################
+xxxxx####xxxxxxxxxxxxxxxx
+xxxxx####xxxxxxxxxxxxxxxx
+xxxxx####xxxxxxxxxxxxxxxx
+xxxxx#################xxx
+xxxxx####################
+xxxxx####xxxx#######e####
+xxxxx####xxxx###e#####xxx
+xxxxx####xxxx#########xxx
+xxxxx####xxxx#######e#xxx
+######e###############xxx
+######################xxx

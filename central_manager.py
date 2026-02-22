@@ -27,8 +27,8 @@ class CentralManager:
         self.order_manager.tick(self.terrain_map, self.troops_manager, mx, my, camera)
 
         self.terrain_map.render(WIN, camera)
-        self.troops_manager.update_visibility(self.terrain_map)
-        self.troops_manager.render(WIN, camera)
+        self.troops_manager.update_visibility(self.terrain_map, self.order_manager)
+        self.troops_manager.render(WIN, camera, self.order_manager)
         self.building_manager.render(WIN, camera)
         self.order_manager.render(WIN, camera)
 

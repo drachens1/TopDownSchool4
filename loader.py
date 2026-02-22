@@ -17,6 +17,7 @@ def load_central_manager(map_path: str) -> CentralManager:
         lines = [line.rstrip("\n") for line in f]
 
     width, height = map(int, lines[0].split())
+    print("W",width,"H",height)
 
     assert len(lines[1:]) == height
     for row in lines[1:]:

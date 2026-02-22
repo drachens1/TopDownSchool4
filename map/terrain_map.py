@@ -2,7 +2,6 @@ import pygame
 
 from grid_helper import SCALE, map_cell, BUILDING
 
-
 class TerrainMap:
     cells: list[int]
     width: int

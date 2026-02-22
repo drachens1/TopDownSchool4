@@ -24,7 +24,6 @@ class OrderManager:
         self.orders[order_id] = None
         self.free_list.append(order_id)
 
-
     def render(self, WIN, camera):
         for order in self.orders:
             if order is None: continue
